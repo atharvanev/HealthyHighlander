@@ -3,11 +3,17 @@ from discord.ext import commands
 from menu_generator import get_items
 from dotenv import load_dotenv
 import os
+import google.generativeai as genai
+
+
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+API_KEY = os.getenv("GEMINI_KEY")
 
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 bot = commands.Bot(command_prefix="!", intents= discord.Intents.all())
 
@@ -44,7 +50,17 @@ async def menu(ctx):
     #     f"**Lunch:** {lunch_str}\n\n"
     #     f"**Dinner:** {dinner_str}"
     # )
-    await ctx.send(embed=embed)   
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def makemeal(ctx,*,calcount:int):
+    
+    response = model.generate_content(f"generate a meal of {calcount} calories for the full day and its okay to estimate make length less than 2000",
+        generation_config = genai.GenerationConfig(
+            max_output_tokens=1000,
+        )
+    )
+    await ctx.reply(response.text)
 
 
 bot.run(BOT_TOKEN)
