@@ -47,7 +47,7 @@ async def on_command_error(ctx, error):
         remaining_time = round(error.retry_after, 2)  # Rounded to 2 decimal places
         await ctx.reply(f"You're on cooldown! Please try again after {remaining_time} seconds.")
     else:
-        raise error  # Re-raise other errors to be handled elsewhere
+        raise error  
 
 
 
@@ -57,10 +57,9 @@ async def hello(ctx):
 
 @bot.command()
 async def menu(ctx):
-    food = get_items()  # Get the food items
-    date,breakfast, lunch, dinner = food  # Unpack the lists
+    food = get_items() 
+    date,breakfast, lunch, dinner = food  
 
-    # Join the items in each list into a single string, separated by commas
     breakfast_str = ', '.join(breakfast)
     lunch_str = ', '.join(lunch)
     dinner_str = ', '.join(dinner)
